@@ -89,9 +89,16 @@ See URL `http://batsov.com/rubocop/', `https://github.com/rails/spring' and `htt
   "Enable ruby-spring-rubocop and disable ruby-rubocop buffer-locally when spring binstub of rubocop is available."
   (-if-let (executable (flycheck-ruby-spring-rubocop--find-executable))
     (progn
-      (setq-local flycheck-ruby-rubocop-executable "DUMMY") ;; fixme
-      (setq-local flycheck-ruby-spring-rubocop-executable local-rubocop))
-    (setq-local flycheck-ruby-spring-rubocop-executable "DUMMY"))) ;; fixme
+      ;; Disable ruby-rubocop
+      (unless (memq 'ruby-rubocop flycheck-disabled-checkers)
+        (push 'ruby-rubocop flycheck-disabled-checkers))
+      ;; Enable ruby-spring-rubocop
+      (when (memq 'ruby-spring-rubocop flycheck-disabled-checkers)
+        (setq flycheck-disabled-checkers
+              (remq 'ruby-spring-rubocop flycheck-disabled-checkers)))
+      (setq-local flycheck-ruby-spring-rubocop-executable executable))
+    (unless (memq 'ruby-rubocop flycheck-disabled-checkers)
+      (push 'ruby-rubocop flycheck-disabled-checkers))))
 
 (provide 'flycheck-spring-rubocop)
 ;;; flycheck-spring-rubocop.el ends here
