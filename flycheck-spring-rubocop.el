@@ -96,9 +96,7 @@ See URL `http://batsov.com/rubocop/', `https://github.com/rails/spring' and `htt
       (when (memq 'ruby-spring-rubocop flycheck-disabled-checkers)
         (setq flycheck-disabled-checkers
               (remq 'ruby-spring-rubocop flycheck-disabled-checkers)))
-      (setq-local flycheck-ruby-spring-rubocop-executable executable))
-    (unless (memq 'ruby-rubocop flycheck-disabled-checkers)
-      (push 'ruby-rubocop flycheck-disabled-checkers))))
+      (setq-local flycheck-ruby-spring-rubocop-executable executable))))
 
 (provide 'flycheck-spring-rubocop)
 ;;; flycheck-spring-rubocop.el ends here
