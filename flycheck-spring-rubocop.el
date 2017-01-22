@@ -42,8 +42,15 @@ See URL `http://batsov.com/rubocop/', `https://github.com/rails/spring' and `htt
   ;; For spring binstub to work, it is required to set `default-directory` properly.
   :working-directory flycheck-ruby-spring-rubocop--find-default-directory
 
-  ;; The following definitions are dead copy of ruby-rubocop except "DUMMY".
-  :command ("DUMMY" "--display-cop-names" "--format" "emacs"
+  ;; Find a spring binstub and set it as executable.
+  ;; If a binstub is not found, disable this checker.
+  :enabled
+  (lambda ()
+    (--if-let (flycheck-ruby-spring-rubocop--find-executable default-directory)
+        (setq-local flycheck-ruby-spring-rubocop-executable it)))
+
+  ;; The following definitions are dead copy of ruby-rubocop.
+  :command ("rubocop" "--display-cop-names" "--format" "emacs"
             ;; Explicitly disable caching to prevent Rubocop 0.35.1 and earlier
             ;; from caching standard input.  Later versions of Rubocop
             ;; automatically disable caching with --stdin, see
@@ -77,26 +84,13 @@ See URL `http://batsov.com/rubocop/', `https://github.com/rails/spring' and `htt
    buffer-file-name
    (locate-dominating-file buffer-file-name "Gemfile")))
 
-(defun flycheck-ruby-spring-rubocop--find-executable ()
+(defun flycheck-ruby-spring-rubocop--find-executable (working-directory)
   "Come up with a spring binstub."
-  (-if-let (root-dir (flycheck-ruby-spring-rubocop--find-default-directory nil))
-      (let* ((bin-dir (f-join root-dir "bin"))
-             (local-rubocop (f-join bin-dir "rubocop")))
-        (when (f-exists? local-rubocop)
-          local-rubocop))))
-
-(defun flycheck-ruby-spring-rubocop-init ()
-  "Enable ruby-spring-rubocop and disable ruby-rubocop buffer-locally when spring binstub of rubocop is available."
-  (-if-let (executable (flycheck-ruby-spring-rubocop--find-executable))
-    (progn
-      ;; Disable ruby-rubocop
-      (unless (memq 'ruby-rubocop flycheck-disabled-checkers)
-        (push 'ruby-rubocop flycheck-disabled-checkers))
-      ;; Enable ruby-spring-rubocop
-      (when (memq 'ruby-spring-rubocop flycheck-disabled-checkers)
-        (setq flycheck-disabled-checkers
-              (remq 'ruby-spring-rubocop flycheck-disabled-checkers)))
-      (setq-local flycheck-ruby-spring-rubocop-executable executable))))
+  (and working-directory
+       (let* ((bin-dir (f-join working-directory "bin"))
+              (local-rubocop (f-join bin-dir "rubocop")))
+         (when (f-exists? local-rubocop)
+           local-rubocop))))
 
 (provide 'flycheck-spring-rubocop)
 ;;; flycheck-spring-rubocop.el ends here
