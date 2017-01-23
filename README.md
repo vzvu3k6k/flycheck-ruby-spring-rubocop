@@ -1,4 +1,4 @@
-# flycheck-spring-rubocop.el
+# flycheck-ruby-spring-rubocop.el
 
 This is a flycheck extension to run rubocop via spring binstub.
 

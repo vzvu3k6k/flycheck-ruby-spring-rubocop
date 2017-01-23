@@ -1,4 +1,4 @@
-;;; flycheck-spring-rubocop.el --- Run rubocop via spring binstub.  -*- lexical-binding: t; -*-
+;;; flycheck-ruby-spring-rubocop.el --- Run rubocop via spring binstub.  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2016 vzvu3k6k
 
@@ -92,5 +92,5 @@ See URL `http://batsov.com/rubocop/', `https://github.com/rails/spring' and `htt
          (when (f-exists? local-rubocop)
            local-rubocop))))
 
-(provide 'flycheck-spring-rubocop)
-;;; flycheck-spring-rubocop.el ends here
+(provide 'flycheck-ruby-spring-rubocop)
+;;; flycheck-ruby-spring-rubocop.el ends here
